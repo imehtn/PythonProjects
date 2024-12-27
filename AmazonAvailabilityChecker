@@ -1,0 +1,49 @@
+#python script for Amazon product availability checker
+
+from lxml import html
+import requests 
+from time import sleep
+import schedule
+import random
+
+#email id for who want to checj availability
+receiver_email_id = "EMAIL_ID_OF_USER"
+
+def check(url):
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36'}
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        #print(f"Response status code: {response.status_code}")  # Debugging line
+        response.raise_for_status()
+        doc=html.fromstring(response.content)
+        availability = doc.xpath('//div[@id ="availability"]//text()')
+        return ''.join(availability).strip()
+    except requests.exceptions.RequestException as e:
+        print(f"Error while checking availability: {e}")
+        return None
+    
+def job():
+    # Asin Id is the product Id which needs to be provided by the user
+    Asin = input('Enter Asin: ')
+    #inputurl = input("Enter url: ")
+    url = f"http://www.amazon.com/dp/{Asin}"
+    print(f"Amazon url: {url}")
+
+    print ("Processing...")
+    ans = check(url)
+
+    if ans:
+        #print(f"Status: {ans}")
+        if 'In Stock' in ans or 'Only' in ans:
+            print("Product is available")
+        else:
+            print("Product is not available")
+    else: 
+        print("Failed to retrieve availability status.")
+
+schedule.every(1).minutes.do(job)
+ 
+while True:
+    # running all pending tasks/jobs
+    schedule.run_pending() 
+    sleep(random.uniform(30,60))
