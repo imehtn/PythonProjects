@@ -1,0 +1,27 @@
+# extract tweets from a user
+
+import tweepy 
+
+# credentials to tweet 
+consumer_key ="slFONERWbLjP83tkQ0uAtjPfX"
+consumer_secret ="4dQ30ECIaHbHjzczJOb6gV1yGCJtqUUBxtyKfuKc4zCPK85i52"
+access_key ="887446493631848449-5qw72kUWrQHd0170l3nKOdovsLSR2PK"
+access_secret ="3Msfo9MUFwCpDAzPcZLLKGUTYkoHS8gz6eUb9uFtPRPmg"
+
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret,access_key,access_secret)
+# Calling api
+api = tweepy.API(auth)
+
+# Function to extract tweets
+def get_tweets(username):
+        tweets_count = 10
+        try:
+            tweets = api.user_timeline(screen_name=username, count = tweets_count, tweet_mode = 'extended')
+            for tweet in tweets:
+                print(f'{tweet.created_at}-{tweet.full_texy}\n')
+        
+        except tweepy.TweepyException as e:
+            print(f'Error: {e}')
+
+#username 
+get_tweets("elonmusk") 
