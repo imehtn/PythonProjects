@@ -40,4 +40,4 @@ username="" #enter username
 password="" #enter password
 url = "https://github.com/login"
 
-startBot(username,password,url) #call bot with credentials
+startBot(username,password,url) #call bot using credentials
